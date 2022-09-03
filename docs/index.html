@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8">
+  <title>Poke physics calc</title>
+</head>
+
+<body>
+  <div id="control-area">
+    <img id="image-src" style="display: none;">
+    <div id="icon-control">
+      <div id="icon-select">
+        <select>
+          <option hidden>選択してください</option>
+        </select>
+        <div id="texture-container">
+          <!-- 初期サイズは50x50 -->
+          <canvas id="texture-canvas" width="50" height="50"></canvas>
+        </div>
+      </div>
+      <label for="is-random"><input type="checkbox" id="is-random">ランダム生成</label>
+    </div>
+    <div id="object-control">
+      <div id="left-container">
+        <label for="is-display-walls"><input type="checkbox" id="is-display-walls" checked>左右の壁</label>
+        <label for="is-display-ground"><input type="checkbox" id="is-display-ground" checked>地面</label>
+      </div>
+      <div id="right-container">
+        <span>その他のオブジェクト</span>
+        <label for="none"><input type="radio" id="none" value="none" name="equipment" checked>なし</label>
+        <label for="slope"><input type="radio" id="slope" value="slope" name="equipment">スロープ</label>
+        <label for="cup"><input type="radio" id="cup" value="cup" name="equipment">カップ</label>
+        <label for="hourglass"><input type="radio" id="hourglass" value="hourglass" name="equipment">砂時計</label>
+      </div>
+    </div>
+  </div>
+  <div id="matter-canvas-area"></div>
+  <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+  <script src="./main.js"></script>
+  <script src="https://docs.opencv.org/4.6.0/opencv.js"></script>
+</body>
+
+</html>
