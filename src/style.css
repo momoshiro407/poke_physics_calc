@@ -2,6 +2,10 @@
   margin: 20px 0;
 }
 
+#icon-container {
+  display: none;
+}
+
 #icon-select {
   height: 50px;
   display: flex;
