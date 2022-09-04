@@ -3,10 +3,10 @@ import { getVerticesFromImageSrc } from './use_opencv';
 import './style.css';
 import nameData from './json/name_data.json'
 
-// matter.jsオブジェクト用の変数
+// matter.js関連のモジュール格納用
 let Body, Bodies, Bounds, Constraint, Composite, engine;
-// 画像要素、canvas要素用の変数
-let imgElement, textureCanvas, matterCanvas;
+// アイコンテクスチャcanvas、物理演算canvas要素
+let textureCanvas, matterCanvas;
 // アイコンの輪郭の座標値の配列
 let vertices = [];
 // 物理演算を行うcanvas領域のサイズ
@@ -26,8 +26,6 @@ const commonOptions = {
 };
 
 $(document).ready(() => {
-  // 元となる画像要素、canvas要素の取得
-  imgElement = $('#image-src')[0];
   textureCanvas = $('#texture-canvas')[0];
   matterCanvas = $('#matter-canvas-area')[0];
 
@@ -38,10 +36,12 @@ $(document).ready(() => {
 
   // 名前情報オブジェクトの配列
   const names = nameData['names'];
-
-  // 名前情報からアイコン選択プルダウンのoptionを生成する
+  const iconContainer = $('#icon-container')[0];
   $.each(names, (i, data) => {
+    // 名前情報からアイコン選択プルダウンのoptionを生成する
     $(iconSelect).append(`<option value="${data.id}">${String(data.id).padStart(3, 0)}: ${data.name}</option>`);
+    //アイコン選択時に毎回アイコン画面を読み込んでいると時間がかかるので画面表示時に全て読み込んでimg要素を生成しておく
+    $(iconContainer).append(`<img id="${i + 1}" src="./image/${i + 1}.png">`);
   });
 
   // matter.jsの基本設定
@@ -57,7 +57,8 @@ $(document).ready(() => {
   // 生成するアイコンの選択
   $(iconSelect).on('change', () => {
     const id = $('option:selected').val();
-    imgElement.src = `./image/${id}.png`;
+    const imgElement = $(`img[id='${id}']`)[0];
+    setIconObject(imgElement);
   });
 
   // ランダム生成の時はアイコン選択プルダウンを非活性にする
@@ -100,10 +101,6 @@ $(document).ready(() => {
     }
   });
 
-  $(imgElement).on('load', () => {
-    setIconObject();
-  });
-
   $(matterCanvas).on('click', () => {
     // オブジェクトのドラッグ中は新規でオブジェクトを追加させない
     if (mouseConstraint.body) { return };
@@ -112,20 +109,16 @@ $(document).ready(() => {
       // ランダムにオブジェクトを生成する
       const id = Math.floor(Math.random() * names.length) + 1;
       $(iconSelect).prop('selectedIndex', id);
-      imgElement.src = `./image/${id}.png`;
-      // オブジェクトが生成されるまで時差があるので追加処理の実行を少し遅らせる
-      setTimeout(() => {
-        addIconObject();
-      }, 50);
-    } else {
-      // 頂点座標が生成されていない場合は新規でオブジェクトを追加させない
-      if (vertices.length === 0) { return };
-      addIconObject();
+      const imgElement = $(`img[id='${id}']`)[0];
+      setIconObject(imgElement);
     }
+    // 頂点座標が生成されていない場合は新規でオブジェクトを追加させない
+    if (vertices.length === 0) { return };
+    addIconObject();
   });
 });
 
-const setIconObject = () => {
+const setIconObject = (imgElement) => {
   // アイコンの輪郭の頂点座標を取得する
   vertices = getVerticesFromImageSrc(imgElement);
 
