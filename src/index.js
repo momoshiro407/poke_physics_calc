@@ -3,19 +3,6 @@ import { getVerticesFromImageSrc } from './use_opencv';
 import './style.css';
 import nameData from './json/name_data.json'
 
-// 開発用テストデータ
-const icons = [
-  { number: 1, name: 'スボミー8G', url: './image/1.png' },
-  { number: 2, name: 'ロズレイド8G', url: './image/2.png' },
-  { number: 3, name: 'ガブリアス8G', url: './image/3.png' },
-  { number: 4, name: 'ルカリオ8G', url: './image/4.png' },
-  { number: 5, name: 'ユキメノコ8G', url: './image/5.png' },
-  { number: 6, name: 'スボミー7G', url: './image/6.png' },
-  { number: 7, name: 'ロズレイド7G', url: './image/7.png' },
-  { number: 8, name: 'ガブリアス7G', url: './image/8.png' },
-  { number: 9, name: 'ルカリオ7G', url: './image/9.png' },
-  { number: 10, name: 'ユキメノコ7G', url: './image/10.png' }
-];
 // matter.jsオブジェクト用の変数
 let Body, Bodies, Bounds, Constraint, Composite, engine;
 // 画像要素、canvas要素用の変数
@@ -50,11 +37,11 @@ $(document).ready(() => {
   const isDisplayGround = $('#is-display-ground')[0];
 
   // 名前情報オブジェクトの配列
-  // const names = nameData['names'];
+  const names = nameData['names'];
 
   // 名前情報からアイコン選択プルダウンのoptionを生成する
-  $.each(icons, (i, data) => {
-    $(iconSelect).append(`<option value="${data.number}">${data.number}: ${data.name}</option>`);
+  $.each(names, (i, data) => {
+    $(iconSelect).append(`<option value="${data.id}">${String(data.id).padStart(3, 0)}: ${data.name}</option>`);
   });
 
   // matter.jsの基本設定
@@ -69,8 +56,8 @@ $(document).ready(() => {
 
   // 生成するアイコンの選択
   $(iconSelect).on('change', () => {
-    const number = $('option:selected').val();
-    imgElement.src = icons.find(icon => icon.number == number).url;
+    const id = $('option:selected').val();
+    imgElement.src = `./image/${id}.png`;
   });
 
   // ランダム生成の時はアイコン選択プルダウンを非活性にする
@@ -123,9 +110,9 @@ $(document).ready(() => {
 
     if ($(isRandom).is(':checked')) {
       // ランダムにオブジェクトを生成する
-      const number = Math.floor(Math.random() * icons.length);
-      $(iconSelect).prop('selectedIndex', number + 1); // optionの0番目は空なので除く
-      imgElement.src = icons[number].url;
+      const id = Math.floor(Math.random() * names.length) + 1;
+      $(iconSelect).prop('selectedIndex', id);
+      imgElement.src = `./image/${id}.png`;
       // オブジェクトが生成されるまで時差があるので追加処理の実行を少し遅らせる
       setTimeout(() => {
         addIconObject();
@@ -139,9 +126,6 @@ $(document).ready(() => {
 });
 
 const setIconObject = () => {
-  textureCanvas.width = imgElement.width;
-  textureCanvas.height = imgElement.height;
-
   // アイコンの輪郭の頂点座標を取得する
   vertices = getVerticesFromImageSrc(imgElement);
 
