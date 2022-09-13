@@ -9,12 +9,13 @@ const getVerticesFromImageSrc = (imgElement) => {
   cv.cvtColor(src, dstGray, cv.COLOR_RGBA2GRAY);
   // 二値化
   cv.threshold(dstGray, dstBinary, 1, 255, cv.THRESH_BINARY);
+  src.delete();
   dstGray.delete();
 
   // 輪郭の抽出
   const contours = new cv.MatVector();
   const hierarchy = new cv.Mat();
-  cv.findContours(dstBinary, contours, hierarchy, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE, { x: 0, y: 0 });
+  cv.findContours(dstBinary, contours, hierarchy, cv.RETR_EXTERNAL, cv.CHAIN_APPROX_SIMPLE);
   dstBinary.delete();
   hierarchy.delete();
 
