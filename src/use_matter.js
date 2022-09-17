@@ -1,7 +1,6 @@
 import Matter from 'matter-js';
 
 const mousePointer = { x: 0, y: 0 };
-let mouseConstraint = null;
 
 const basicMatterConfig = (canvas, width, height) => {
   // 使用モジュール
@@ -34,7 +33,7 @@ const basicMatterConfig = (canvas, width, height) => {
 
   // マウス、マウス制約を生成
   const mouse = Mouse.create(canvas);
-  mouseConstraint = MouseConstraint.create(engine, {
+  const mouseConstraint = MouseConstraint.create(engine, {
     mouse: mouse,
     constraint: {
       angularStiffness: 0,
@@ -59,7 +58,7 @@ const basicMatterConfig = (canvas, width, height) => {
   // エンジンを実行
   Runner.run(engine);
 
-  return { Body, Bodies, Bounds, Constraint, Composite, engine };
+  return { Body, Bodies, Bounds, Constraint, Composite, engine, mouseConstraint };
 };
 
-export { basicMatterConfig, mousePointer, mouseConstraint };
+export { basicMatterConfig, mousePointer };

@@ -1,10 +1,10 @@
-import { basicMatterConfig, mousePointer, mouseConstraint } from './use_matter';
+import { basicMatterConfig, mousePointer } from './use_matter';
 import { getVerticesFromImageSrc } from './use_opencv';
 import './style.css';
 import nameData from './json/name_data.json'
 
 // matter.js関連のモジュール格納用
-let Body, Bodies, Bounds, Constraint, Composite, engine;
+let Body, Bodies, Bounds, Constraint, Composite, engine, mouseConstraint;
 // アイコンテクスチャcanvas、物理演算canvas要素
 let textureCanvas, matterCanvas;
 // アイコンの輪郭の座標値の配列
@@ -45,7 +45,7 @@ $(document).ready(() => {
   });
 
   // matter.jsの基本設定
-  ({ Body, Bodies, Bounds, Constraint, Composite, engine } = basicMatterConfig(matterCanvas, matterWidth, matterHeight));
+  ({ Body, Bodies, Bounds, Constraint, Composite, engine, mouseConstraint } = basicMatterConfig(matterCanvas, matterWidth, matterHeight));
 
   // 初期の基本地形を追加
   ground = Bodies.rectangle(matterWidth / 2, matterHeight, matterWidth, 40, { ...commonOptions, isStatic: true });
